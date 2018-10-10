@@ -13,7 +13,7 @@ public class JsoupTest {
      */
      
     public static void main(String[] args) {
-        // Jsoup를 이용해서 Mnet chart 크롤링
+        // Jsoup를 이용해서 엠넷차트
         String url = "http://www.mnet.com/chart/TOP100/2018011013";
         Document doc = null;
          
@@ -36,7 +36,7 @@ public class JsoupTest {
         System.out.println("============================================================");
          
         int rank=1;
-       for(Element el : element.select("div.MMLITitle_BOX")) {    // 하위 차트들을 for문 돌면서 출력
+       for(Element el : element.select("div.MMLITitleSong_BOX")) {    // 하위 차트들을 for문 돌면서 출력
             System.out.println(rank+" "+el.text());
             rank++;
         }
