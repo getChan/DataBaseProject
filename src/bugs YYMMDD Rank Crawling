@@ -18,12 +18,12 @@ public class bugs {
     public static void main(String[] args) {
         // Jsoup를 이용해서 벅스 노래차트 크롤링
     	Scanner sc = new Scanner(System.in);
-    	int chardate=20171207;
+    	int chardate=20171107;
     	int hour = 00;
     	System.out.println("제목 검색");
     	String Song_name=sc.next(); //제목 입력
     	
-    	for(; chardate<=20171231; chardate++) {
+    	for(; chardate<=20171130; chardate++) {
         String url = "https://music.bugs.co.kr/chart/track/realtime/total?chartdate="+chardate+"&charthour=00";
         Document doc = null;
          
@@ -41,15 +41,15 @@ public class bugs {
         for(Element el : element.select("p.title")) {    // for문 이용하여 1~100위 노래제목 출력
         	if(Song_name.equals(el.text())){
         		System.out.println("날짜:"+chardate+" 제목: "+el.text()+"순위:"+cnt);
-        		is_song= true;
+        		//System.out.println(cnt);
+        		is_song =true;
         		break;
         	}
-        	cnt++;//순위 상승
-        	if(is_song) {
-        		System.out.println("날짜:"+chardate+" 제목: "+el.text()+"해당 노래가 차트에 없습니다.");
-        	}
-        	
+        	cnt++;//순위 상승        	
         }
+        if(!is_song) {
+    		System.out.println("날짜:"+chardate+" 제목: "+Song_name+" 해당 노래가 차트에 없습니다.");
+    	}
         
     	}
     }
