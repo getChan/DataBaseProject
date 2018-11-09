@@ -25,7 +25,7 @@ def GenieTodB(ymd, hour):
     
     #커밋
     conn.commit()
-    
+    print(ymd+hour+'complete')
     return
 
 
