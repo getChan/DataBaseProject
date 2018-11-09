@@ -1,9 +1,7 @@
 from bs4 import BeautifulSoup as bs
 import requests
 
-r = requests.get('http://www.genie.co.kr/chart/top200?ditc=D&ymd=20181010&rtm=Y&hh=13')
-
-
+# getdata(180827, 13, 1)
 def getData(ymd, hour, pagenum):
     url = 'http://www.genie.co.kr/chart/top200?ditc=D&ymd=20'+ymd+'&rtm=Y&hh='+hour+'&pg='+pagenum
     with requests.get(url) as r:
@@ -21,5 +19,4 @@ def getData(ymd, hour, pagenum):
         artists = map(lambda x: ''.join(x.text.split()), artists)
         for song in zip(songrank, titles, artists, rankwave):
             yield song
-    pass
-
+    return
