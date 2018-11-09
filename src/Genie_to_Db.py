@@ -8,19 +8,26 @@ conn = pymysql.connect(host='zuzak.cvqcrkck1aqg.us-east-1.rds.amazonaws.com', us
 # Connection 으로부터 Cursor 생성
 curs = conn.cursor()
  
+ymd = '180810'
+hh = '13'
 # SQL문 실행
-for i in getData('20181010', '13', '1'):
-    sql = "INSERT INTO zuzak.genie VALUES (%s, %s, %s, %s)"
-    val = ('18101013', i[0], i[1], i[2])
-    curs.execute(sql, val)
-    conn.commit()
- 
-# 데이타 Fetch
-#rows = curs.fetchall()
-#print(rows)     # 전체 rows
-# print(rows[0])  # 첫번째 row: (1, '김정수', 1, '서울')
-# print(rows[1])  # 두번째 row: (2, '강수정', 2, '서울')
+for pn in range(1, 3):    
+    for i in getData(ymd, hh, str(pn)):
+        print(i)
+        sql = "INSERT INTO zuzak.genie VALUES (%s, %s, %s, %s, %s)"
+        val = (ymd+hh, i[0], i[1], i[2], i[3])
+        curs.execute(sql, val)
+        # 데이타 Fetch
+        rows = curs.fetchone()
+        pass
+    pass
+        
+#커밋
+conn.commit()
  
 
+
+#cursor 닫기 
+curs.close()
 # Connection 닫기
 conn.close()

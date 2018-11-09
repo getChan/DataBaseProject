@@ -5,7 +5,7 @@ r = requests.get('http://www.genie.co.kr/chart/top200?ditc=D&ymd=20181010&rtm=Y&
 
 
 def getData(ymd, hour, pagenum):
-    url = 'http://www.genie.co.kr/chart/top200?ditc=D&ymd='+ymd+'&rtm=Y&hh='+hour+'&pg='+pagenum
+    url = 'http://www.genie.co.kr/chart/top200?ditc=D&ymd=20'+ymd+'&rtm=Y&hh='+hour+'&pg='+pagenum
     with requests.get(url) as r:
         r.encoding = 'UTF-8'
         html = r.text
@@ -15,21 +15,11 @@ def getData(ymd, hour, pagenum):
         titles = listbody.find_all('a', {'class':'title ellipsis'})
         artists = listbody.find_all('a', {'class':'artist ellipsis'})
         
-        songranks = map(lambda x: ''.join(x.text.split()), songranks)
+        songrank = map(lambda x: ''.join(x.text.split()[0]), songranks)
+        rankwave = map(lambda x: ''.join(x.text.split()[-1]), songranks)
         titles = map(lambda x: ''.join(x.text.split()), titles)
         artists = map(lambda x: ''.join(x.text.split()), artists)
-        for song in zip(songranks, titles, artists):
+        for song in zip(songrank, titles, artists, rankwave):
             yield song
     pass
-
-#year, month, date
-ymd = '20181010'
-#hour
-hour = '13'
-# pagenum
-pagenum = '1'
-
-for i in getData(ymd, hour, pagenum):
-    print(i)
-
 
