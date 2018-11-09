@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
  
-public class Bugs_1to100 {
+public class Bugs_title_Search {
  
      
     public static void main(String[] args) {
@@ -17,26 +17,28 @@ public class Bugs_1to100 {
     	
         Scanner sc = new Scanner(System.in);
         
+        System.out.print("제목 검색 : ");
+        String Song_name=sc.next();
         System.out.print("시작 YYMMDD 입력 : ");
         int chardate=sc.nextInt();
-        System.out.println("시작 HH 입력 : ");
+        System.out.print("시작 HH 입력 : ");
         int hour = sc.nextInt();
-/*        System.out.println("종룔 YYMMDD 입력 : ");
-        int from_chardate = sc.nextInt();*/
-        
-        String ranking[] = new String[101];
+        System.out.print("종룔 YYMMDD 입력 : ");
+        int from_chardate = sc.nextInt();
+
         int i=1;
         int k=1;
+        int cnt=0;
+        int key = 0;
+        String ranking[] = new String[101];
         String insert_ranking[] = new String[101];
-        String insert_Y = ""+chardate+""+hour;
         String insert_title[] = new String[101];
         String insert_artist[] = new String[101];
+        String insert_date;
         
-        
-/*        System.out.print("제목 검색 : ");
-        String Song_name=sc.next();*/
        
-        //for(;chardate<=from_chardate;chardate++) {
+        for(;chardate<=from_chardate;chardate++) {
+         insert_date = ""+chardate+""+hour;
          String url = "https://music.bugs.co.kr/chart/track/realtime/total?chartdate="+chardate+"&charthour="+hour;
          Document doc = null;
           
@@ -53,8 +55,6 @@ public class Bugs_1to100 {
              	ranking[i] = el.text();
              	i++;
          }
-         i=1;
-         
          for(int j=1;j<=100;j++)
          {
          	if(j <10 ) {
@@ -67,7 +67,7 @@ public class Bugs_1to100 {
          		insert_ranking[j] = ranking[j].substring(0,3);
          	}
          }
-                 
+         i=1;          
          
          for(Element el : element.select("p.title")) { // 1~100위 노래제목 저장
              insert_title[k] = el.text();
@@ -81,20 +81,21 @@ public class Bugs_1to100 {
          }
          k=1;
              
+         for(Element el : element.select("p.title")) {    // for문 이용하여 1~100위 가수 출력
+        	 cnt++;
+        	 if(Song_name.equals(el.text())) {
+        		 key=cnt;
+                 System.out.println(insert_date+" 순위 "+insert_ranking[key]+" 제목 "+insert_title[key]+" 가수 "+insert_artist[key]);
+        		 break;
+        	 }
+            }
+         key=0;
+         cnt=0;
          
-         System.out.println();
-         System.out.println("1위부터 100위 노래\n");  // 1위부터 100위 노래 출력
-         System.out.println("============================================================");
+
+            
          
-         for(int z=1;z<=100;z++) {
-         	System.out.print(insert_ranking[z]+" ");
-         	System.out.print(insert_title[z]+" ");
-         	System.out.print(insert_artist[z]);
-         	System.out.println();
-         }
-    	
-         
-         // DB연결
+/*         // DB연결
         Connection conn = null;
         PreparedStatement pstmt = null;
         Statement stmt = null;
@@ -114,10 +115,10 @@ public class Bugs_1to100 {
             
             for(int j=1;j<=100;j++)
             {
-            pstmt.setString(1, insert_Y);
-            pstmt.setString(2, insert_ranking[j]);
-            pstmt.setString(3, insert_title[j]);
-            pstmt.setString(4, insert_artist[j]);
+            pstmt.setString(1, insert_date);
+            pstmt.setString(2, insert_ranking[key]);
+            pstmt.setString(3, insert_title[key]);
+            pstmt.setString(4, insert_artist[key]);
             
             pstmt.executeUpdate();
             }
@@ -131,7 +132,7 @@ public class Bugs_1to100 {
                 if(stmt !=null)stmt.close();
                 if(conn!=null)conn.close();
             }catch(SQLException e) {}
-        }
+        }*/
        }
     }
-//}
+}
