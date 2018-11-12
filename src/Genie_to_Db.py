@@ -1,12 +1,15 @@
 import pymysql
 from Genie_Chart_Crawling import getData
 
+# MySQL Connection 연결
+conn = pymysql.connect(host='zuzak.cvqcrkck1aqg.us-east-1.rds.amazonaws.com', user='getChan', password='cksdl951!!',
+                       db='zuzak', charset='euckr')
+ 
+# Connection 으로부터 Cursor 생성
+curs = conn.cursor()    
 #GenieTodB()
 def GenieTodB(ymd, hour): 
-    # MySQL Connection 연결
-    conn = pymysql.connect(host='zuzak.cvqcrkck1aqg.us-east-1.rds.amazonaws.com', user='getChan', password='cksdl951!!',db='zuzak', charset='euckr')    
-    # Connection 으로부터 Cursor 생성
-    curs = conn.cursor()    
+    
     # SQL문 실행
     for pn in range(1, 3):    
         for i in getData(ymd, hour, str(pn)):
@@ -22,11 +25,8 @@ def GenieTodB(ymd, hour):
     
     #커밋
     conn.commit()
-    print(ymd+hour+'complete')
-    curs.close()
-    # Connection 닫기
-    conn.close()
+    
     return
 
 
-
+# Connection 닫기
