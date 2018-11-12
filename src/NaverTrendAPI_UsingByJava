@@ -1,0 +1,143 @@
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Scanner;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.io.*;
+import java.util.Iterator;
+import org.json.simple.*;
+import org.json.simple.parser.*;
+import java.util.Iterator;
+
+public class Test {
+
+    public static void main(String[] args) {
+        String clientId = "SJZ0tG1NcKUFvCEpfpOg";//애플리케이션 클라이언트 아이디값";
+        String clientSecret = "j0YPitu0Jo";//애플리케이션 클라이언트 시크릿값";
+        
+        //1)입력문
+        Scanner sc = new Scanner(System.in);
+        System.out.println("검색어 설정");
+        String SearchName = sc.nextLine();
+        System.out.println("음원이 3위 안에 들어온 시점은?  [ex) YYYYMMDD]");
+        String Date = sc.next();
+        String Date_to_input_end = Date.substring(0, 4) + "-" + Date.substring(4,6) + "-" + Date.substring(6,8);
+        //
+        
+        
+        //2)30일 전 계산
+        Test test = new Test();
+
+        String Date_to_daysago = null;
+		try {
+			Date_to_daysago = test.addDate("D", Date, -30);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String Date_to_input_start =  Date_to_daysago.substring(0, 4) + "-" + Date_to_daysago.substring(4,6) + "-" + Date_to_daysago.substring(6,8);
+       //
+		//3) json 가져오기
+        try {
+        	//String text = URLEncoder.encode("자바", "UTF-8");
+            String apiURL = "https://openapi.naver.com/v1/datalab/search";
+            String body = "{\"startDate\":\"" + Date_to_input_start + "\",\"endDate\":\"" + Date_to_input_end +"\",\"timeUnit\":\"date\",\"keywordGroups\":[{\"groupName\":\""+ SearchName +"\",\"keywords\":[\""+ SearchName + "\"]}]}";
+            URL url = new URL(apiURL);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("X-Naver-Client-Id", clientId);
+            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+            con.setRequestProperty("Content-Type", "application/json");
+
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.write(body.getBytes("utf-8"));
+            wr.flush();
+            wr.close();
+
+            int responseCode = con.getResponseCode();
+            BufferedReader br;
+            if(responseCode==200) { // 정상 호출
+                br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+            } else {  // 에러 발생
+                br = new BufferedReader(new InputStreamReader(con.getErrorStream(), "utf-8"));
+            }
+
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = br.readLine()) != null) {
+                response.append(inputLine);
+            }
+          
+            
+            
+            //4)가져온 json파일 파싱
+            JSONParser jsonParser = new JSONParser();
+            
+            //JSON데이터를 넣어 JSON Object 로 만들어 준다.
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(response.toString());
+             
+            //results의 배열을 추출
+            JSONArray MusicInfoArray = (JSONArray) jsonObject.get("results");
+ 
+            for(int i=0; i<MusicInfoArray.size(); i++)
+            {
+            	 JSONObject musicObject = (JSONObject) MusicInfoArray.get(i);
+            	JSONArray MusicInfoArray_data = (JSONArray) musicObject.get("data");
+            	
+                for(int j =0; j < MusicInfoArray_data.size(); j++)
+            	{
+            		
+                JSONObject musicObject_data = (JSONObject) MusicInfoArray_data.get(j);
+                System.out.println("bookInfo: period==>"+musicObject_data.get("period"));
+                System.out.println("bookInfo: ratio==>"+ Math.round(Double.parseDouble((musicObject_data.get("ratio")).toString())));
+            	
+            	}
+ 
+            }
+  
+            
+        //끝~    
+            br.close();
+        
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    
+    public String addDate(String aa, String da, int dd) throws Exception {
+
+        DateFormat format = new SimpleDateFormat("yyyyMMdd");
+        Date date = format.parse(da);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        if (aa.equals("Y")) {
+
+            calendar.add(Calendar.YEAR, dd);
+
+        } else if (aa.equals("M")) {
+
+            calendar.add(Calendar.MONTH, dd);
+
+        } else if (aa.equals("D")) {
+
+            calendar.add(Calendar.DATE, dd);
+
+        }
+
+        return format.format(calendar.getTime());
+
+    }
+
+    
+}
