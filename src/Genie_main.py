@@ -2,11 +2,11 @@ from calendar import Calendar
 from Genie_to_Db import GenieTodB
 
 c = Calendar()
-year = 2017
+year = 2018
 for i, month in enumerate(c.yeardayscalendar(year, width=1)): 
     for week_7 in month:
         for week in week_7:
-            for date in week:
+            for date in week: 
                 if date == 0:
                     continue
                 else:
