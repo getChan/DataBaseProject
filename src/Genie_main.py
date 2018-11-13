@@ -2,7 +2,7 @@ from calendar import Calendar
 from Genie_to_Db import GenieTodB
 
 c = Calendar()
-year = 2016
+year = 2017
 for i, month in enumerate(c.yeardayscalendar(year, width=1)): 
     for week_7 in month:
         for week in week_7:
@@ -10,7 +10,6 @@ for i, month in enumerate(c.yeardayscalendar(year, width=1)):
                 if date == 0:
                     continue
                 else:
-                    
                     #print(i+1, date)
                     if (i+1)//10 < 1:
                         si = '0'+str(i+1)
