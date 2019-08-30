@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 # 쿼리를 입력하면 db에 있는 데이터를 pandas DataFrame형태로 반환
 def dbQuery(query):
     
-    conn = pymysql.connect(host='zuzak.cvqcrkck1aqg.us-east-1.rds.amazonaws.com', user='getChan', password='cksdl951!!',db='zuzak', charset='euckr')
+    conn = pymysql.connect('보안')
     q = query
     try:
         with conn.cursor() as cursor:
