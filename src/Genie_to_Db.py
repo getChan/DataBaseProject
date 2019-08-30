@@ -4,7 +4,7 @@ from Genie_Chart_Crawling import getData
 #GenieTodB()
 def GenieTodB(ymd): 
     # MySQL Connection 연결
-    conn = pymysql.connect(host='zuzak.cvqcrkck1aqg.us-east-1.rds.amazonaws.com', user='getChan', password='cksdl951!!',db='zuzak', charset='euckr')    
+    conn = pymysql.connect('보안')    
     # Connection 으로부터 Cursor 생성
     curs = conn.cursor()    
     # SQL문 실행
